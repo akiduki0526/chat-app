@@ -4,5 +4,7 @@ Rails.application.routes.draw do
   root to: "messages#index"
   resources :users, only: [:edit, :update]
   #usersルートにeditとupdateアクションを追加
+  resources :rooms, only: [:new, :create]
+  
 
 end
