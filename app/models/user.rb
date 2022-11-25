@@ -9,4 +9,7 @@ class User < ApplicationRecord
   #validatesはDBに保存の規制をかけるメソッド
   #presence: trueは「空ではないか？」という意味
 
+  has_many :room_users
+  has_many :rooms, through: :room_users
+
         end
