@@ -4,6 +4,8 @@ class Message < ApplicationRecord
   belongs_to :user
   #一つのメッセージは一つのユーザーから送られる
 
+  has_one_attached :image
+
   validates :content, presence: true
   #からのメッセージはDBに保存されない(presence: trueとすることで保存をブロックしている)
 
