@@ -10,7 +10,7 @@ class MessagesController < ApplicationController
  
    def create
      @room = Room.find(params[:room_id])
-     #↑なぜ２回実行する？
+     #createメソッドないでもインスタンス変数は定義してあげないといけない
      @message = @room.messages.new(message_params)
      
      if @message.save
