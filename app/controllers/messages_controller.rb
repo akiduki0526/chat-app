@@ -1,36 +1,33 @@
 class MessagesController < ApplicationController
-  
   def index
-    @message = Message.new
-    @room = Room.find(params[:room_id])
-  end
-
-
-  def create
-    @room = Room.find(params[:room_id])
-    #paramsに含まれているroom_idをインスタンス変数に代入する
-    @message = @room.messages.new(message.params)
-               #【room.messages.new】はチャットルームに紐づいたmessageという意味
-    @message.save
-
-    if @message.save
-      redirect_to room_messages_path(@room)
-      #メッセージの送信に成功した場合はindexに戻って新しくインスタンス変数を生成する
-      #【room_messages_path】はindexへのパス
-    else
-      render :index
-      #条件式にマッチしない(メッセージの送信に失敗した)場合はindexに遷移する
-    end
-
-  end
-
-
-  private
-
-  def message_params
-    params.require(:message).permit(:content).merge(user_id: current_user.id)
-    #current_userが入力したcontentをmessage_paramsに代入する
-
-  end
+     @message = Message.new
+     @room = Room.find(params[:room_id])
+     @messages = @room.messages.includes(:user)
+     #チャットルームに紐づいている全てのメッセージ。ユーザー情報も紐づいている
+     #includes(:user)とすることでユーザー情報を一度のみの取得で終わらせれる
+     #※でないとN＋1問題になり、処理に時間がかかる。
+   end
  
-end
+   def create
+     @room = Room.find(params[:room_id])
+     #↑なぜ２回実行する？
+     @message = @room.messages.new(message_params)
+     
+     if @message.save
+       redirect_to room_messages_path(@room)
+     else
+       @messages = @room.messages.includes(:user)
+       #ユーザー情報を保持しつつ、indexアクションに戻れる。
+       #そのときに@messagesが定義されていないとエラーになってしまいます？
+       render :index
+     end
+   end
+ 
+ 
+   private
+ 
+   def message_params
+     params.require(:message).permit(:content).merge(user_id: current_user.id)
+   end
+ end
+ 
