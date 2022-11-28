@@ -20,6 +20,14 @@ class RoomsController < ApplicationController
     end
   end
 
+  def destroy
+    room = Room.find(params[:id])
+    #削除したいroomのidを取得
+    room.destroy
+    redirect_to root_path
+  end
+
+
   private
 
   def room_params

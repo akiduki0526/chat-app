@@ -13,8 +13,8 @@
 <!--ユーザーと紐づいているルーム配列の数だけ繰り返し処理する-->
     <div class="room">
       <div class="room-name">
-        <a href="#"><%= room.name %></a>
-        <!--該当するチャットルーム名を表示する-->
+  <%= link_to room.name, room_messages_path(room) %>
+  <!--該当するチャットルーム名をリンクとして表示する。遷移先はmessages#index-->
       </div>
     </div>
   <% end %>
